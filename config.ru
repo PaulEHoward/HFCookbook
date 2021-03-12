@@ -1,2 +1,2 @@
-require '.HFCookBook.rb'
-run Sinatra::Appliaation
+require './HFCookBook.rb'
+run Sinatra::Application
