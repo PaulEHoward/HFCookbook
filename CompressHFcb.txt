@@ -1,0 +1,154 @@
+# 
+        ######################################################
+        # Initial Stuff:  Opening the input file             #
+        ######################################################
+
+
+cblongfile = File.open("HFCShort.txt",'r')   # The MasterCook text file.
+            #############
+            #  Methods  #
+            #############
+
+# findLine(ifile,st) reads up through the first line it finds in
+# the file iflie containing the string st and returns the line
+
+def findLine(ifile,st)
+    line = ifile.gets
+    while(!(line.match(/#{Regexp.quote(st)}/)) && !(ifile.eof)) do # to interpret st 
+                                                           # literally
+      line = ifile.gets
+    end
+    if( ifile.eof)
+      return   "end of file"
+    end
+  
+     return line
+  
+end
+
+def readRecipe(ifile) # reads one recipe into a hash
+  line = findLine(ifile,"Exported from MasterCook")
+  if line == "end of file"
+    return
+  end
+  recipe = Hash.new
+
+       # Get the title
+
+  line = ifile.gets
+  while !(line.match(/\w/))
+    line = ifile.gets           # skip blank lines before the title
+  end
+  line.chomp!
+  matches = line.match(/\s*(?<title>.*)\s*\Z/)
+  recipe[:title] = matches[:title]
+
+        # Get the author
+
+  line = ifile.gets
+  while !(line.match(/\w/))
+    line = ifile.gets           # skip blank lines before the author
+  end
+  line.chomp!
+  matches = line.match(/.*?:\s*(?<author>.*)\s*\Z/)
+  recipe[:author] = matches[:author]
+
+        # Get Servings, prep time 
+
+  line = ifile.gets
+  matches = line.match(/.*:\s*(?<servings>\d*)
+                       .*:(?<preptime>\d*:\d*)/x)
+                      # the x option ignores white space
+                      # including carrige returns in the 
+                      # regex
+  recipe[:servings] = matches[:servings]
+  recipe[:preptime] = matches[:preptime]
+  
+         # Get Categories
+
+  line = ifile.gets  
+  istring = line.chomp
+  line = ifile.gets
+  while (line.match(/\w/))
+    line.chomp
+    istring = istring << line
+    line = ifile.gets
+  end
+  cats = istring.match(/.*:\s*(?<categories>.*)\s*|\z/)
+  catarray = cats[:categories].split(/\s{2,}/)
+ # catarray = cats[:categories].scan(/\w+|\G\w+/) # not exactly sure why this works
+  recipe[:categories] = catarray
+
+          # Get Ingreidients (An array of hashes)
+          # one hash for each ingreidient
+          # ingreidients[i][:amount], 
+          # ingreidients[i][:measure], etc
+
+  while (!(line.match(/---/)))
+    line = ifile.gets
+  end
+  ingreidients = Array.new
+  line = ifile.gets   # first ingreidient
+  while (line.match(/\w/))
+#    print "#{line}\n"  # diagnostic
+    matches1 = line.match(/\A\s*(?<amount>[\d\s\/]*)/)
+    matches3 = line.match(/.{9}\s*(?<measure>\w+)/)
+    ingreidient = Hash.new
+#    print "#{matches1[:amount]} \n"  # diagnostic
+    ingreidient[:amount] = matches1[:amount].strip
+    ingreidient[:measure] = matches3[:measure]
+    ingreidients[ingreidients.length] = ingreidient    
+    line = ifile.gets
+  end
+  recipe[:ingreidients] = ingreidients
+
+          # Get directions in an array
+
+  directions = Array.new
+  line = ifile.gets   # this should be the first 
+                      # direction line    
+   #  directions may be more than one line long and
+   # are separated by a blank line.  The list of 
+   # direcitons ends with 3 blank lines followed by the
+   # line "Source:"
+   while (!(line.match(/Source:/)))
+     dirline = line.chomp.strip
+     while (line.match(/\w/))
+        line = ifile.gets
+        dirline = dirline << " " << line.chomp.strip
+     end
+#     print "  #{dirline}\n"
+     m = dirline.match(/\A\s*\d+\.\s*(?<direction>.*)/)
+     directions[directions.length] = m[:direction].strip
+     while (!(line.match(/\w/)))
+        line = ifile.gets
+     end
+   end
+   recipe[:directions] = directions
+
+           # Get the Source
+   line = ifile.gets
+   print "  #{line}  \n"
+   sourceline = line.chomp.strip
+   while (!(line.match(/Start to Finish/)))
+    line = gets.ifile 
+    sourceline = sourceline << " " << line.chomp.strip
+   end
+   m = sourceline.match(/"(?<source>.*?)"/)
+   recipe[:source] = m[:source]
+
+  return recipe
+end 
+   
+          
+       #################
+       #  End Methods  #
+       #################
+       
+      
+while !(cblongfile.eof)
+  recipehash = readRecipe(cblongfile)
+  print "#{recipehash} \n\n"         # to test (delete later)
+end
+
+cblongfile.close

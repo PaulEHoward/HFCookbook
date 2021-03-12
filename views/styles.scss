@@ -1,0 +1,132 @@
+$red: #903;
+$black: #444;
+$white: #fff;
+$blue: blue;
+$main-font: Helvetica, Arial, sans-serif;
+
+body {
+  font-family: $main-font;
+}
+h1 {
+  color: $red;
+  font: 32px/1 $main-font;
+}
+header h1 {
+  font-size: 20px;
+  line-height: 40px;
+  background: transparent url(/images/logo.png) 0 0 no-repeat;
+  padding-left: 84px;
+}
+@mixin tabs ($background: blue, $color: yellow) {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: $background;
+    overflow: hidden;
+  }
+  li {
+    float: left;
+  }
+  a {
+    text-decoration: none;
+    display: block;
+    padding: 8px;
+    background: $background;
+    color: $color;
+    &:hover {
+      background: darken($background, 20%);
+    }
+  }
+}
+nav {
+  @include tabs ($background: $blue, $color: $white);
+  font-weight: bold;
+}
+
+p {
+  font: 13px/1.4 $main-font;
+}
+select {
+  width: 400px;
+  max-width: 100%;
+  /* So it doesn't overflow from it's parent */
+}
+
+option {
+  /* wrap text in compatible browsers */
+  -moz-white-space: pre-wrap;
+  -o-white-space: pre-wrap;
+  white-space: pre-wrap;
+  /* hide text that can't wrap with an ellipsis */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* add border after every option */
+  border-bottom: 1px solid #DDD;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+tr:nth-child(even) {
+  background-color: #eee;
+}
+tr:nth-child(odd) {
+ background-color: #fff;
+}
+th {
+  background-color: black;
+  color: white;
+}
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+.steps li {
+  margin: 2em 0;
+  padding-top: 1em;
+  display: block;
+  position: relative;
+  counter-increment: inst;
+}
+.steps li::before {
+  content: counter(inst);
+  
+  background: rgba(0, 68, 255, 0.61);
+  color: #fff;
+  
+  font-size: 1em;
+  font-weight: 700;
+  font-style: italic;
+  text-shadow: 1px 1px rgba(255, 150, 0, 0.5);
+  
+  border-radius: 0 0.675em 0.675em 0;
+  font-size: 1.5em;
+  text-align: center;
+  
+  padding-top: 0;
+  padding-left: 2.25%;
+  left: -5%;
+  top: -0.65em;
+  height: 1.35em;
+  width: 1.35em;
+  position: absolute;
+  
+  transition: all 0.2s ease-in-out;
+  
+  z-index: -1;
+}
+@media (min-width: 33em) {
+  .steps li:before {
+    border-radius: 50%;
+    font-size: 1.5em;
+    height: 1.35em;
+    margin-left: 2.5%;
+    padding-left: 0;
+    padding-top: 0;
+    top: -0.15em;
+    width: 1.35em;
+    z-index: -1;
+  }
+}

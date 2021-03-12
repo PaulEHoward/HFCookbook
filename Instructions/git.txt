@@ -1,0 +1,24 @@
+Began with 
+$ git init
+in the main directory.  Then
+$ git add -A
+then
+$git commit -m "Initial commit."
+then
+$ heroku login 
+and entered my email and password: Y1kyanSabms
+This didn't work.  The computer just hung.  It turned out that the problem
+was the file ~/.netrc which had the same entry about 3000 times.  After
+deleting all but one occurrence the login worked.
+Then tried (to put the app on heroku)
+$ heroku create axiom-of-choice-from-phoward-s
+which worked.  Then (after a few misteps) I
+Created a gemfile by copying the gemfile from SinatraWorksapce
+then 
+$ gem install bundler
+$ bundle install
+Then, to add the gem file to the commits:
+$ git add .
+$ git commit -m "Commit before pusing to heroku."
+and finally 
+$ git push heroku master

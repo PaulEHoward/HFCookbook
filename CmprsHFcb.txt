@@ -1,0 +1,55 @@
+# 
+        ######################################################
+        # Initial Stuff:  Opening the input file             #
+        ######################################################
+
+
+cblongfile = File.open("HFCShort.txt,'r')   # The MasterCook text file.
+            #############
+            #  Methods  #
+            #############
+
+# nextRecipeStart reads up through "* Exported from MasterCook *"
+
+def nextRecipeStart(cblongfile)
+  line = jfile.gets
+  while !(line.match(/Exported from MasterCook/) && !cblongfile.eof)
+    line = jfile.gets
+  end
+  if( cblongfile.eof)
+    return "end of file"
+  end
+end
+
+def readRecipe(cblongfile) # reads one recipe into a hash
+  
+
+
+  jentry = String.new
+  while !(line.match(/\A\s*\z/))
+    line = jfile.gets
+    line.chomp!
+    jentry << line << ' '
+  end
+  jentryarray = jentry.split(" - ")         # hyphen surrounded by
+                                        # spaces separates abbr. and
+                                        # full name
+  jentryhsh = Hash.new
+  jentryhsh[:abbreviation] = jentryarray[0].strip
+  jentryhsh[:fullname] = jentryarray[1].strip
+#  print "#{jentryhsh}\n"  #diagnostic
+  return jentryhsh
+end
+
+       #################
+       #  End Methods  #
+       #################
+       
+      
+while !(cblongfile.eof)
+  jentryhsh = getJournal(jfile)
+  print "#{jentryhsh} \n"         # to test (delete later)
+  dataset.insert(abbreviation: jentryhsh[:abbreviation], fullname: jentryhsh[:fullname])
+end
+
+jfile.close

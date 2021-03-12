@@ -1,0 +1,46 @@
+<p style="text-align:center">
+<%=
+  "<h1> #{@recipe[:title]} </h1>"
+%>
+<% @recipe[:ingreidients].each do |ingrdt| %>
+    <% "#{ingrdt[:amount]}  " %>
+    one rep
+<% end %>
+</p>
+<p>
+<a href="/recipelist" style="font-size:150%"> back to recipe list </a>
+</p>
+
+<h2  style="font-size:150%;text-align:center;text-color:red"> Ingreidients </h2>
+<table style="width:75%" class="center">
+  <tr>
+      <th> Amount </th>
+      <th> Measure </th>
+      <th> Ingredient and Prep Method </th>
+  </tr>
+  <% @recipe[:ingreidients].each  do |ingrdt| %>
+    <tr>
+    <td style = "text-align:center; font-size:130%"> <%= "  #{ingrdt[:amount]} " %> </td> 
+    <td style = "text-align:center; font-size:130%"> <%= "  #{ingrdt[:measure]}" %> </td>
+    <td style = "text-align:center; font-size:130%"> <%= " #{ingrdt[:name]}" %> </td>
+    </tr>
+  <% end %> 
+</table>
+
+<br>
+<h2  style="font-size:150%;text-align:center"> Directions </h2>
+<ol class="steps">
+<% @recipe[:directions].each_with_index  do |dir, ind| %>
+    <li>
+      <p style = "text-align:left; font-size:130%"> <%= " #{dir}" %> </p>
+    </li>
+  <% end %> 
+</ol> 
+<table style="width:75%" class="center">
+  <% @recipe[:directions].each_with_index  do |dir, ind| %>
+    <tr>
+      <td style = "text-align:left; font-size:130%"> <%= "#{ind +1}. #{dir}" %> </td>
+    </tr>
+  <% end %> 
+</table>
+ 

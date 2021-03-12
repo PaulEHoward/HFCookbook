@@ -1,0 +1,19 @@
+
+    <a href='/forms/new'> Create a new form </a>
+    <% if @recipetitles.any? %>
+      <table style="width:100%"
+        <tr>
+          <th> Title </th>
+        </tr>>
+         <% @recipetitles.each do |title| %>
+            <tr>
+              <td> <a href = "listrecipe/<%="#{title[1]}" %>">
+                         <%= "#{title[0]}" %> </a>
+              </td>
+              <td>
+            <tr>
+         <% end %>
+       </table>
+       <% else %>
+          <p> No recipes have been created. </p>
+    <% end %>

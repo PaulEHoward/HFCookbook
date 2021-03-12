@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Howard Family Cookbook</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/styles.css">
+   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Howard Family Cookbook - <%= @title || 'Untitled' %> </h1>
+    <%= erb :nav %> 
+  </header>
+  <section>
+    <%= yield %>
+    </section>
+  </body>
+</html>
