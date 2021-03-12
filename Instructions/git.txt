@@ -1,3 +1,5 @@
+(git.txt from ~/axiom-of-choice-from-phoward-s/instructions/ modified for
+ the Cookbook program)
 Began with 
 $ git init
 in the main directory.  Then
@@ -11,7 +13,7 @@ This didn't work.  The computer just hung.  It turned out that the problem
 was the file ~/.netrc which had the same entry about 3000 times.  After
 deleting all but one occurrence the login worked.
 Then tried (to put the app on heroku)
-$ heroku create axiom-of-choice-from-phoward-s
+$ heroku create hfcookbook
 which worked.  Then (after a few misteps) I
 Created a gemfile by copying the gemfile from SinatraWorksapce
 then 
