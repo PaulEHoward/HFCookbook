@@ -53,3 +53,20 @@ did the git add -A, git commit , git push heroku master
 Went to
 https://hfcookbook.herokuapp.com/
 Success!
+
+Making a Git repository:
+
+Went to github.com and signed in.  Clicked on "repositories" tab.
+Clicked on "new" under "find a repository".  
+Entered "HFCookbook" as the title
+Then from the command line:
+git remote add origin git@github.com:PaulEHoward/HFCookbook.git
+git branch -M main
+git push -u origin main
+the last command didn't work.  I had following the directions here then repeat the command
+https://gist.github.com/adamjohnson/5682757
+
+I assume git push -u origin main
+
+will push new versions to github.
+

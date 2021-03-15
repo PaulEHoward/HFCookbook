@@ -47,4 +47,21 @@ def rcpincat( cb,cat)
   end
   return(recipettls)
 end
+
+class Recipes(title = "",author = "",servings = "", preptime = "", categories = "", ingreidients = "", directions = "", source = "", totaltime = "", cooktime = "", ratings = "", perserving = "", notes = "", 
+  def initialize
+    @title = title
+    @author = author
+    @servings = servings
+    @preptime = preptime
+    @categories = categories
+    @ingreidients = ingreidients
+    @directions = directions
+    @source = source
+    @totaltime = totaltime
+    @cooktime = cooktime
+    @ratings = ratings
+    @perserving = perserving
+    @notes = notes
+end
              
