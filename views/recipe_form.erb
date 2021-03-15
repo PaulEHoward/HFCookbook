@@ -1,0 +1,22 @@
+
+<label for= "first_initial"> First Initial: </label>
+<input for="first_initial" type = "text" name="author[first_initial]" value="<%= "#{@author[:first_initial]}" %>" size = "2" >
+
+<label for = "title">Title: </label>
+<input id = "title" type = "text" name = "recipe[title]" value = "<%= "#{@recipe[:title]}" %>" >
+
+<label for = "author"> Author: </label>
+<input id = "author" type = "text" name = "recipe[author]" value = "<%= "#{@recipe[:name]}" %>" >
+
+<label for = "servings"> Number of Serivngs: </label>
+<input for = "servings" type = "integer" name = "recipe[servings]" value = "<%= "#{@recipe[:servings]}" %>" >
+
+<label for = "preptime"> First Name: </label>
+<input for = "preptime" type = "text" name = "recipe[preptime]" value = "<%= "#{@recipe[:preptime]}" %>" >
+
+<label for = "name"> Last Name: </label>
+<input for = "name" type = "text" name = "recipe[name]" value = "<%= "#{@recipe[:name]}" %>" >
+<br>
+<p align ="center">
+<input type = "submit" value = "Save recipe">
+</p>

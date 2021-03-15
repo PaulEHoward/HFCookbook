@@ -11,7 +11,7 @@ set :public_folder, 'public' # unnecessary line since 'public' is the default
 
 get('/styles.css'){ scss :styles }
 cookbook=YAML.load_file('cookbook.yml')
-
+cookbook.sort_by! { |k| k[:title]}
 get('/') do
   @title = 'Home'
   erb :home, :layout => :pagelayout # the default layout file is
@@ -23,8 +23,30 @@ get '/recipelist' do
     @title = 'Recipe List'
     @recipetitles = recipetitles(cookbook) # recipetitles
                # is a method in the /methods/cbmethods file
+               # which inputs a cookbook and returns an 
+               # an array of pairs ["title","index in cookbook"]
     erb :recipelist, :layout => :pagelayout
 end
+
+get '/categorylist' do
+    @title = 'Category List'
+    @recipecats = categories(cookbook) # categories
+               # is a method in the /methods/cbmethods file
+    erb :categorylist, :layout => :pagelayout
+end
+
+get '/listrecipesincat/:cat' do
+    # Gets a category name and lists the recipes in that
+    # category
+    @title = 'Recipes with category' << " " <<"#{params[:cat]}"
+    @recipetitles = rcpincat(cookbook, params[:cat]) # repincat
+               # is a method in the /methods/cbmethods file
+               # which inputs a category and returns an 
+               # array of pairs for each recipe
+               # in that category.  ["title", "incex in cookbook]
+    erb :recipelist, :layout => :pagelayout
+end
+
 
 get '/recipes/:id' do
     @title = 'Recipe'
@@ -32,6 +54,12 @@ get '/recipes/:id' do
     @recipe = cookbook[ind]
     erb :show_recipe, :layout => :pagelayout
   end
+
+  get '/recipes/new' do
+    @title = 'Add a New Recipe'
+    @recipe = Hash.new
+    erb :new_recipe, :layout => :pagelayout
+  end  
   
  
 

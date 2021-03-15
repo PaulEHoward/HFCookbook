@@ -8,14 +8,17 @@ then
 $git commit -m "Initial commit."
 then
 $ heroku login 
-and entered my email and password: Y1kyanSabms
+and entered my email and password: Y1kyanSabms (Got a new password)
 This didn't work.  The computer just hung.  It turned out that the problem
 was the file ~/.netrc which had the same entry about 3000 times.  After
 deleting all but one occurrence the login worked.
 Then tried (to put the app on heroku)
 $ heroku create hfcookbook
 which worked.  Then (after a few misteps) I
-Created a gemfile by copying the gemfile from SinatraWorksapce
+Created a gemfile by copying the gemfile from axiom-of-choice-from-phoward-s but I added the line (to Gemfile)
+
+gem "yaml"
+
 then 
 $ gem install bundler
 $ bundle install
@@ -24,3 +27,29 @@ $ git add .
 $ git commit -m "Commit before pusing to heroku."
 and finally 
 $ git push heroku master
+(this command is used to deploy revisions too)
+Looks like going to 
+https://hfcookbook.herokuapp.com/
+will give me the app on heroku.
+But I got an error page
+"Appliction Error ..."
+heroku logs --tail for details
+Had some problems
+Added gem "puma" to Gemfile
+Created a Procfile with
+web: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}
+ran bundle install
+
+In the config.ru file I have
+require './HFCookBook.rb'
+run Sinatra::Application
+
+Then running
+heroku local
+runs the app locally just like it would run on heroku.
+
+did the git add -A, git commit , git push heroku master
+
+Went to
+https://hfcookbook.herokuapp.com/
+Success!
