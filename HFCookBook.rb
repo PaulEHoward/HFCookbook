@@ -47,6 +47,13 @@ get '/listrecipesincat/:cat' do
     erb :recipelist, :layout => :pagelayout
 end
 
+get '/recipes/new' do
+  @title = 'Add a New Recipe'
+  @recipe = Recipes.new
+  print "\n\n\nrecipe #{@recipe.title}\n\n\n"
+  erb :new_recipe, :layout => :pagelayout
+end  
+
 
 get '/recipes/:id' do
     @title = 'Recipe'
@@ -55,11 +62,12 @@ get '/recipes/:id' do
     erb :show_recipe, :layout => :pagelayout
   end
 
-  get '/recipes/new' do
-    @title = 'Add a New Recipe'
-    @recipe = Hash.new
-    erb :new_recipe, :layout => :pagelayout
-  end  
+ 
+
+post '/recipes' do
+  recipe = Recipes.new(params[:recipe])
+  redirect to("/recipes/#{author.id}")
+end
   
  
 

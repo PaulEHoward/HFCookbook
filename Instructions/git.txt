@@ -54,6 +54,8 @@ Went to
 https://hfcookbook.herokuapp.com/
 Success!
 
+But See the note below on pushing to heroku
+
 Making a Git repository:
 
 Went to github.com and signed in.  Clicked on "repositories" tab.
@@ -69,4 +71,8 @@ https://gist.github.com/adamjohnson/5682757
 I assume git push -u origin main
 
 will push new versions to github.
+
+AND NOW to push to heroku requires 
+
+git push heroku main
 

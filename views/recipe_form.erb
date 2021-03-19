@@ -1,22 +1,30 @@
 
-<label for= "first_initial"> First Initial: </label>
-<input for="first_initial" type = "text" name="author[first_initial]" value="<%= "#{@author[:first_initial]}" %>" size = "2" >
+<label for = "title">Title: 
+<input id = "title" type = "text" name = "recipe[title]" size = "20" value = "<%= "#{@recipe.title}" %>" >
+</label>
 
-<label for = "title">Title: </label>
-<input id = "title" type = "text" name = "recipe[title]" value = "<%= "#{@recipe[:title]}" %>" >
+<label for = "author"> &nbsp Author: 
+<input id = "author" type = "text" name = "recipe[author]" size = "20" value = "<%= "#{@recipe.author}" %>" >
+</label>
 
-<label for = "author"> Author: </label>
-<input id = "author" type = "text" name = "recipe[author]" value = "<%= "#{@recipe[:name]}" %>" >
+<label for = "servings"> Number of Serivngs: 
+<input for = "servings" type = "integer" name = "recipe[servings]" size = "4" value = "<%= "#{@recipe.servings}" %>" >
+</label>
 
-<label for = "servings"> Number of Serivngs: </label>
-<input for = "servings" type = "integer" name = "recipe[servings]" value = "<%= "#{@recipe[:servings]}" %>" >
+<label for = "preptime"> Prep Time: 
+<input for = "preptime" type = "text" name = "recipe[preptime]" size = "5" value = "<%= "#{@recipe.preptime}" %>" >
+</label>
 
-<label for = "preptime"> First Name: </label>
-<input for = "preptime" type = "text" name = "recipe[preptime]" value = "<%= "#{@recipe[:preptime]}" %>" >
+<label for = "ingreidients"> Ingreidients: 
+<input for = "ingreidients" type = "text" name = "recipe[ingreidients]" value = "<%= "#{@recipe.ingreidients}" %>" >
+</label>
 
-<label for = "name"> Last Name: </label>
-<input for = "name" type = "text" name = "recipe[name]" value = "<%= "#{@recipe[:name]}" %>" >
+<label for = "directions"> Directions:
+<textarea for = "directions" rows = "10" cols = "50" name = "recipe[directions]" value = "<%= "#{@recipe.directions}" %>" >
+</textarea>
+</label>
 <br>
 <p align ="center">
 <input type = "submit" value = "Save recipe">
 </p>
+<br>

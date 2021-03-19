@@ -48,8 +48,12 @@ def rcpincat( cb,cat)
   return(recipettls)
 end
 
-class Recipes(title = "",author = "",servings = "", preptime = "", categories = "", ingreidients = "", directions = "", source = "", totaltime = "", cooktime = "", ratings = "", perserving = "", notes = "", 
-  def initialize
+class Recipes
+  def initialize (title = "Pork",author = "",servings = "",\
+    preptime = "", categories = "", ingreidients = "",\
+    directions = "", source = "", totaltime = "",\
+    cooktime = "", ratings = "", perserving = "",\
+    notes = "") 
     @title = title
     @author = author
     @servings = servings
@@ -63,5 +67,10 @@ class Recipes(title = "",author = "",servings = "", preptime = "", categories = 
     @ratings = ratings
     @perserving = perserving
     @notes = notes
+  end
+  attr_reader :title, :author, :servings, :preptime, \
+              :categories, :ingreidients, :directions,\
+              :source, :totaltime, :cooktime, :ratings,\
+              :perserving, :notes
 end
              
