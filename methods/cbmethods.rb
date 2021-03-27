@@ -48,29 +48,56 @@ def rcpincat( cb,cat)
   return(recipettls)
 end
 
+
+#  Class for recipes
+
+
 class Recipes
-  def initialize (title = "Pork",author = "",servings = "",\
-    preptime = "", categories = "", ingreidients = "",\
-    directions = "", source = "", totaltime = "",\
-    cooktime = "", ratings = "", perserving = "",\
-    notes = "") 
-    @title = title
-    @author = author
-    @servings = servings
-    @preptime = preptime
-    @categories = categories
-    @ingreidients = ingreidients
-    @directions = directions
-    @source = source
-    @totaltime = totaltime
-    @cooktime = cooktime
-    @ratings = ratings
-    @perserving = perserving
-    @notes = notes
+
+  def initialize (recipe = "blank") 
+    iv = Hash.new
+    iv[:title] = "Pork"
+    iv[:author] = ""
+    iv[:servings] = ""
+    iv[:preptime] = ""
+    iv[:categories] = Array.new
+    iv[:ingreidients] = Array.new
+    (0..5).each do |i|
+      iv[:ingreidients][i] = {amount: "", measure: "", name: ""}
+    end
+    iv[:directions] = Array.new
+    (0..5).each do |i|
+      iv[:directions][i] = ""
+    end
+    iv[:source] = ""
+    iv[:totaltime] = ""
+    iv[:cooktime] = ""
+    iv[:ratings] = ""
+    iv[:perserving] = ""
+    iv[:notes] = ""
+      
+    if (recipe == "blank")
+      recipe = iv
+    end
+    @title = recipe[:title]
+    @author = recipe[:author]
+    @servings = recipe[:servings]
+    @preptime = recipe[:preptime]
+    @categories = recipe[:categories]
+    @ingreidients = recipe[:ingreidients]
+    @directions = recipe[:directions]
+    @source = recipe[:source]
+    @totaltime = recipe[:totaltime]
+    @cooktime = recipe[:cooktime]
+    @ratings = recipe[:ratings]
+    @perserving = recipe[:perserving]
+    @notes = recipe[:notes]
   end
-  attr_reader :title, :author, :servings, :preptime, \
+  attr_accessor :title, :author, :servings, :preptime, \
               :categories, :ingreidients, :directions,\
               :source, :totaltime, :cooktime, :ratings,\
               :perserving, :notes
+  # (So @title can be accessed with obj.title
+  # and set with obj.title =   Same for @author, etc.
 end
              

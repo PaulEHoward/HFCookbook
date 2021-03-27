@@ -1,3 +1,9 @@
+
+<p>
+<%= " directios: #{@recipe.directions} ingreidients: #{@recipe.ingreidients}" %>
+</p> <br>
+
+
 <label for = "title">Title: 
 <input id = "title" type = "text" name = "recipe[title]" size = "20" value = "<%= "#{@recipe.title}" %>" >
 </label>
@@ -20,17 +26,18 @@
 <table align="center">
 <tr > <th> Amount </th> <th> Measure </th> <th> ingreidient </th>
 </tr>
-<% @recipe.ingreidients.each_with_index do |ingd, i| %>
+<% @recipe.ingreidients.each do |i| %>
   <tr>
   <td>
-  <input type = "text" name = "recipe[ingreidients][i][:amount]" size = "4" value = "<%="#{ingd[:amount]}"%>" >
+  <input type = "text" name = "recipe[ingreidients][:amount]" size = "4" value = "<%="#{i[:amount]}"%>" >
   </td>  
   <td>
-  <input type = "text" name = "recipe[ingreidients][i][:measure]" size = "4" value = "<%="#{ingd[:measure]}"%>" >
+  <input type = "text" name = "recipe[ingreidients][:measure]" size = "4" value = "<%="#{i[:measure]}"%>" >
   </td>
   <td>
-  <input type = "text" name = "recipe[ingreidients][i][:name]" size = "25" value = "<%="#{ingd[:name]}"%>" >
+  <input type = "text" name = "recipe[ingreidients][:name]" size = "15" value = "<%="#{i[:name]}"%>" >
   </td>
+  <td>
   </tr>
  <% end %> 
 </table>
@@ -41,12 +48,15 @@
 <ol>
 <% @recipe.directions.each_with_index do |dir, i| %>
   <li>  
-  <textarea rows = "1" cols = "80" name = "recipe[directions][i]"  value = " <%="  #{dir}"%>" > 
-  </textarea>
+  <textarea rows = "1" cols = "80" name = "recipe[directions][i]"  value = " <%="#{dir[i]}"%>" >
   </li>
-<% end %> 
+ <% end %> 
  </ol>
 
+<label for = "directions"> Directions:
+<textarea for = "directions" rows = "10" cols = "50" name = "recipe[directions]" value = "<%= "#{@recipe.directions}" %>" >
+</textarea>
+</label>
 <br>
 <p align ="center">
 <input type = "submit" value = "Save recipe">

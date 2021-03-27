@@ -34,6 +34,9 @@
   <% end %> 
 </ol> 
 <table style="width:75%" class="center">
+<tr>
+<th> Directions </th>
+</tr>
   <% @recipe[:directions].each_with_index  do |dir, ind| %>
     <tr>
       <td style = "text-align:left; font-size:130%"> <%= "#{ind +1}. #{dir}" %> </td>

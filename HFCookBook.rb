@@ -65,8 +65,11 @@ get '/recipes/:id' do
  
 
 post '/recipes' do
+  print "\n #{params[:recipe]}\n"
   recipe = Recipes.new(params[:recipe])
-  redirect to("/recipes/#{author.id}")
+  cbl = cookbook.length
+  cookbook[cbl] = recipe
+  redirect to("/recipes/cbl")
 end
   
  

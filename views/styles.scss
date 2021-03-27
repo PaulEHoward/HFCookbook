@@ -79,6 +79,9 @@ th {
   background-color: black;
   color: white;
 }
+/* The next 11 lines have something to do with <ol> list
+   numbering. probably necessary for the fancy numbers. */
+/*
 .center {
   margin-left: auto;
   margin-right: auto;
@@ -90,48 +93,59 @@ th {
   position: relative;
   counter-increment: inst;
 }
-.steps li::before {
-  content: counter(inst);
+*/
+
+  /* for fancy numbering of recipe directions */
   
-  background: rgba(0, 68, 255, 0.61);
-  color: #fff;
-  
-  font-size: 1em;
-  font-weight: 700;
-  font-style: italic;
-  text-shadow: 1px 1px rgba(255, 150, 0, 0.5);
-  
-  border-radius: 0 0.675em 0.675em 0;
-  font-size: 1.5em;
-  text-align: center;
-  
-  padding-top: 0;
-  padding-left: 2.25%;
-  left: -5%;
-  top: -0.65em;
-  height: 1.35em;
-  width: 1.35em;
-  position: absolute;
-  
-  transition: all 0.2s ease-in-out;
-  
-  z-index: -1;
-}
-@media (min-width: 33em) {
-  .steps li:before {
-    border-radius: 50%;
+ /* .steps li::before {
+    content: counter(inst); */
+
+/* but deleting from here to ********* gives a pretty nice
+    listing AND eliminates the outlines from tables! AND eliminates the nice headings from nav.erb*/
+/*
+    background: rgba(0, 68, 255, 0.61);
+    color: #fff;
+    
+    font-size: 1em;
+    font-weight: 700;
+    font-style: italic;
+    text-shadow: 1px 1px rgba(255, 150, 0, 0.5);
+    
+    border-radius: 0 0.675em 0.675em 0;
     font-size: 1.5em;
-    height: 1.35em;
-    margin-left: 2.5%;
-    padding-left: 0;
+    text-align: center;
+    
     padding-top: 0;
-    top: -0.15em;
+    padding-left: 2.25%;
+    left: -5%;
+    top: -0.65em;
+    height: 1.35em;
     width: 1.35em;
+    position: absolute;
+    
+    transition: all 0.2s ease-in-out;
+    
     z-index: -1;
   }
-}
+  
+  @media (min-width: 33em) {
+    .steps li:before {
+      border-radius: 50%;
+      font-size: 1.5em;
+      height: 1.35em;
+      margin-left: 2.5%;
+      padding-left: 0;
+      padding-top: 0;
+      top: -0.15em;
+      width: 1.35em;
+      z-index: -1;
+    }
+  }
+*/  
+  
+/* ******** */    
 
-/*  For forms */
+/*  For htmml forms */
 
 label {
   display: flex;

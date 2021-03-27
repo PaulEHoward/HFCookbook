@@ -72,6 +72,17 @@ I assume git push -u origin main
 
 will push new versions to github.
 
+March 21:  the git push -u origin main failed.
+To get this to work I followed the directions here: 
+https://gist.github.com/adamjohnson/5682757
+Starting with
+cd ~/.ssh
+The files id_rsa and id_rsa.pub did not appear so I entered
+ssh-keygen -t rsa -C "phoward@emich.edu"
+then opened id_rsa.pub and copied the contents.  Then logged into my github account and under Account Settings clicked on SSH and GPG keys.  Then on ""New SSH key" and pasted the key.  And now
+git push -u origin main 
+works.
+
 AND NOW to push to heroku requires 
 
 git push heroku main
