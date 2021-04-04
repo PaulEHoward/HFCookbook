@@ -50,29 +50,33 @@ end
 get '/recipes/new' do
   @title = 'Add a New Recipe'
   @recipe = Recipes.new
-  print "\n\n\nrecipe #{@recipe.title}\n\n\n"
+  print "From inside recipes/new \n\n\nrecipe #{@recipe.title}\n\n\n"
   erb :new_recipe, :layout => :pagelayout
 end  
 
 
 get '/recipes/:id' do
     @title = 'Recipe'
-    ind = params[:id].to_i
+    ind = params['id'].to_i # or params[:id]
+    print "\nInside /recipe/:id the index, ind is #{ind}\n"
     @recipe = cookbook[ind]
     erb :show_recipe, :layout => :pagelayout
-  end
-
- 
+end
 
 post '/recipes' do
-  print "\n #{params[:recipe]}\n"
-  recipe = Recipes.new(params[:recipe])
+  print "\ninside post\n #params[:recipe] = #{params[:recipe]}\n"
+  print "\nniside post hshkeys2symbols(params[:recipe]) is #{hshkeys2symbols(params[:recipe])}\n\n"
+  recipen = hshkeys2symbols(Recipes.new(params[:recipe]).recipe)
+    # (should give the recipe as a hash)
+
+  print "\n\nInside the post recipen is  #{recipen} \n\n"
   cbl = cookbook.length
-  cookbook[cbl] = recipe
-  redirect to("/recipes/cbl")
+  cookbook[cbl] = recipen
+  print "Inside the post cbl is \n\n #{cbl}\n\n and cookbook[cbl] is\n\n #{cookbook[cbl]}"
+  cbls = cbl.to_i
+  redirect to("/recipes/#{cbls}")
+#  redirect to "/recipes/1"
 end
-  
- 
 
 get '/about' do
   @title = 'About'
