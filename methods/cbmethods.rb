@@ -55,7 +55,7 @@ end
 class Recipes
 
   attr_accessor :title, :author, :servings, :preptime, \
-  :categories, :ingreidients, :directions,\
+  :categories, :ingredients, :directions,\
   :source, :totaltime, :cooktime, :ratings,\
   :perserving, :notes, :recipe  #:rhash
 # (So @title can be accessed with obj.title
@@ -63,18 +63,18 @@ class Recipes
 
   def initialize (recipe = "blank") 
     iv = Hash.new
-    iv[:title] = "Pork"
+    iv[:title] = ""
     iv[:author] = ""
     iv[:servings] = ""
     iv[:preptime] = ""
     iv[:categories] = Array.new
-    iv[:ingreidients] = Array.new
-    (0..5).each do |i|
-      iv[:ingreidients][i] = {amount: "2", measure: "cups", name: "grease"}
+    iv[:ingredients] = Array.new
+    (0..11).each do |i|
+      iv[:ingredients][i] = {amount: "", measure: "", name: ""}
     end
     iv[:directions] = Array.new
-    (0..5).each do |i|
-      iv[:directions][i] = "stir, stir, stir"
+    (0..11).each do |i|
+      iv[:directions][i] = ""
     end
     iv[:source] = ""
     iv[:totaltime] = ""
@@ -89,12 +89,12 @@ class Recipes
       recipe = iv
     end
     
-    @title = "beans" #recipe[:title]
+    @title = recipe[:title]
     @author = recipe[:author]
     @servings = recipe[:servings]
     @preptime = recipe[:preptime]
     @categories = recipe[:categories]
-    @ingreidients = recipe[:ingreidients]
+    @ingredients = recipe[:ingredients]
     @directions = recipe[:directions]
     @source = recipe[:source]
     @totaltime = recipe[:totaltime]
@@ -103,13 +103,31 @@ class Recipes
     @perserving = recipe[:perserving]
     @notes = recipe[:notes]
 
-    @recipe = recipe
+    @recipe = recipe  # the recipe as a hash
     print "\nInside intialize @recipe is #{@recipe}\n"
   end
 
   # @rhash = @recipe
   # so instance.rhash should give the recipe hash
 
+  def trim # trims off unused ingredients and directions
+    if ( @ingredients.is_a(Array))
+      @ingredients.each_with_index do |ingred, i|
+        if (ingred[amount]=="" &&
+            ingred[measure] == "" &&
+            ingred[name] == "" )
+          @ingredients.delete_at(i) 
+        end
+      end
+    end
+    if ( @directions.is_a(Array) )
+      @directions.each_with_index do |direction, i|
+        if (direction == "")
+          @directions.delete_at(i)
+        end
+      end
+    end
+  end
 end
  
 # hshkeys2symbols takes a hash as input and, if the keys are
@@ -155,5 +173,3 @@ def hshkeys2symbols (hsh)
   end
   return newhsh
 end
-
-

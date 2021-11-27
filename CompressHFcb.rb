@@ -1,10 +1,14 @@
 # 
+# Inputs a MasterCook text file exported by MasterCook (cblongfile) and converts it to a 
+# .yml data file for use by the program HFCookBook.rb  HFCookBook.rb will read it as an 
+# of hashes.
+#
         ######################################################
         # Initial Stuff:  Opening the input file             #
         ######################################################
 
-
-cblongfile = File.open("HFCShort.txt",'r')   # The MasterCook text file.
+cblongfile = File.open("HFC.txt",'r')   # The MasterCook text file full version.
+# cblongfile = File.open("HFCShort.txt",'r')   # The MasterCook text file short version.
             #############
             #  Methods  #
             #############
@@ -28,7 +32,7 @@ end
 
 def readRecipe(ifile) # reads one recipe into a hash
   line = findLine(ifile,"Exported from MasterCook")
-  if line == "end of file"
+  if line.match(/end of file/)
     return
   end
   recipe = Hash.new
@@ -42,6 +46,7 @@ def readRecipe(ifile) # reads one recipe into a hash
   line = line.chomp!
   print "  #{line}\n\n"  #diagnostic
   matches = line.match(/\s*(?<title>.*)\s*\Z/)
+  recipe[:title] = "Untitled"  # in case there is no title (added 11/25/21)
   recipe[:title] = matches[:title]
 
         # Get the author
@@ -80,30 +85,30 @@ def readRecipe(ifile) # reads one recipe into a hash
  # catarray = cats[:categories].scan(/\w+|\G\w+/) # not exactly sure why this works
   recipe[:categories] = catarray
 
-          # Get Ingreidients (An array of hashes)
-          # one hash for each ingreidient
-          # ingreidients[i][:amount], 
-          # ingreidients[i][:measure], etc
+          # Get ingredients (An array of hashes)
+          # one hash for each ingredient
+          # ingredients[i][:amount], 
+          # ingredients[i][:measure], etc
 
   while (!(line.match(/---/)))
     line = ifile.gets
   end
-  ingreidients = Array.new
-  line = ifile.gets   # first ingreidient
+  ingredients = Array.new
+  line = ifile.gets   # first ingredient
   while (line.match(/\w/))
-#    print "#{line}\n"  # diagnostic
+    print "#{line}\n"  # diagnostic
     matches1 = line.match(/\A\s*(?<amount>[\d\s\/]*)/)
     matches2 = line.match(/.{9}\s*(?<measure>\w+)/)
     matches3 = line.match(/.{24}\s*(?<name>.*)/)
-    ingreidient = Hash.new
+    ingredient = Hash.new
 #    print "#{matches1[:amount]} \n"  # diagnostic
-    ingreidient[:amount] = matches1[:amount].strip
-    ingreidient[:measure] = matches2[:measure]
-    ingreidient[:name] = matches3[:name].strip
-    ingreidients[ingreidients.length] = ingreidient    
+    ingredient[:amount] = matches1[:amount].strip
+    ingredient[:measure] = matches2[:measure]
+    ingredient[:name] = matches3[:name].strip
+    ingredients[ingredients.length] = ingredient    
     line = ifile.gets
   end
-  recipe[:ingreidients] = ingreidients
+  recipe[:ingredients] = ingredients
 
           # Get directions in an array
 
@@ -112,17 +117,19 @@ def readRecipe(ifile) # reads one recipe into a hash
                       # direction line    
    #  directions may be more than one line long and
    # are separated by a blank line.  The list of 
-   # direcitons ends with 3 blank lines followed by the
+   # directions ends with 3 blank lines followed by the
    # line "Source:"
-   while (!(line.match(/Source:/)) && !(line.match(/- - -/)))
+   while (!(line.match(/Source:/)) && !(line.match(/- - -/)) && !(line.match(/Cuisine:/)))
      dirline = line.chomp.strip
-     while (line.match(/\w/))
+     while (line.match(/\w/))    # \w is a digit or letter
         line = ifile.gets
         dirline = dirline << " " << line.chomp.strip
      end
-#     print "  #{dirline}\n"
-     m = dirline.match(/\A\s*\d+\.\s*(?<direction>.*)/)
-     directions[directions.length] = m[:direction].strip
+     print "  #{dirline}\n"
+
+     if (m = dirline.match(/\A\s*\d+\.\s*(?<direction>.*)/))
+       directions[directions.length] = m[:direction].strip
+     end  
      while (!(line.match(/\w/)))
         line = ifile.gets
      end
@@ -134,10 +141,17 @@ def readRecipe(ifile) # reads one recipe into a hash
            # (this group ends with "    - - - - - ...")
    longline = line.chomp.strip # We're on 
                                # the line beginnig 
-                               # Source:
+                               # Source: or the line beginning with
+                               # Cuisine:
    while(!(line.match(/- - -/)))
      line = ifile.gets
      longline = longline << " " << line.chomp.strip
+   end
+
+   if (!(m = longline.match(/Cuisine:\s*"(?<cuisine>.*?)"/)))
+    recipe[:cuisine] = ""
+   else
+    recipe[:cuisine] = m[:cuisine]
    end
 
    if (!(m = longline.match(/Source:\s*"(?<source>.*?)"/)))
@@ -190,7 +204,7 @@ def readRecipe(ifile) # reads one recipe into a hash
     line = ifile.gets
    end
    laststr = line.chomp.strip
-   line = ifile.gets
+ #  line = ifile.gets
    while (!(line.match(/Nutr\./)))
     line = ifile.gets
     line = line.chomp.strip
@@ -218,7 +232,9 @@ cookbook = Array.new
 while !(cblongfile.eof)
   recipehash = readRecipe(cblongfile)
   print "#{recipehash} \n\n"         # to test (delete later)
-  cookbook[cookbook.length] = recipehash
+  if (recipehash != nil)
+    cookbook[cookbook.length] = recipehash
+  end
 end
 File.write("cookbook.yml", YAML.dump(cookbook))
 
