@@ -8,7 +8,7 @@ then
 $git commit -m "Initial commit."
 then
 $ heroku login 
-and entered my email and password: Y1kyanSabms (Got a new password)
+and entered my email and passwor (Got a new password)
 This didn't work.  The computer just hung.  It turned out that the problem
 was the file ~/.netrc which had the same entry about 3000 times.  After
 deleting all but one occurrence the login worked.
@@ -32,7 +32,7 @@ Looks like going to
 https://hfcookbook.herokuapp.com/
 will give me the app on heroku.
 But I got an error page
-"Appliction Error ..."
+"Appliction Error ..."sud
 heroku logs --tail for details
 Had some problems
 Added gem "puma" to Gemfile

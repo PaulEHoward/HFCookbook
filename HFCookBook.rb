@@ -2,7 +2,7 @@
 
 require "sinatra"
 require 'sass'
-require "./methods/cbmethods.rb"  # try to store all 
+require "./methods/cbmethods.rb"  # try to store all
                                   # methods here
 require "yaml"
 
@@ -23,7 +23,7 @@ get '/recipelist' do
     @title = 'Recipe List'
     @recipetitles = recipetitles(cookbook) # recipetitles
                # is a method in the /methods/cbmethods file
-               # which inputs a cookbook and returns an 
+               # which inputs a cookbook and returns an
                # an array of pairs ["title","index in cookbook"]
     erb :recipelist, :layout => :pagelayout
 end
@@ -41,7 +41,7 @@ get '/listrecipesincat/:cat' do
     @title = 'Recipes with category' << " " <<"#{params[:cat]}"
     @recipetitles = rcpincat(cookbook, params[:cat]) # repincat
                # is a method in the /methods/cbmethods file
-               # which inputs a category and returns an 
+               # which inputs a category and returns an
                # array of pairs for each recipe
                # in that category.  ["title", "incex in cookbook]
     erb :recipelist, :layout => :pagelayout
@@ -52,7 +52,7 @@ get '/recipes/new' do
   @recipe = Recipes.new
   print "From inside recipes/new \n\n\nrecipe #{@recipe.title}\n\n\n"
   erb :new_recipe, :layout => :pagelayout
-end  
+end
 
 
 get '/recipes/:id' do
@@ -76,6 +76,17 @@ post '/recipes' do
   cbls = cbl.to_i
   redirect to("/recipes/#{cbls}")  #
 #  redirect to "/recipes/1"
+end
+
+post '/search' do
+  @title = "search results for #{params[:st].to_s}"
+  @recipetitles = recipeSearch(cookbook, params[:st]) # recipeSearch
+             # is a method in the /methods/cbmethods file
+             # which inputs a category and returns an
+             # array of pairs for each recipe
+             # (with the search term in its ingredients)  ["title", "incex in cookbook]
+  erb :recipelist, :layout => :pagelayout
+#  params[:st].to_s   # diagnostic - just testing
 end
 
 get '/about' do

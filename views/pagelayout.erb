@@ -12,7 +12,12 @@
 <body>
   <header>
     <h1>Howard Family Cookbook - <%= @title || 'Untitled' %> </h1>
-    <%= erb :nav %> 
+    <%= erb :nav %>
+    <br>
+    <form method = "POST" action = "/search">
+      <p> Ingredient Search: <input type="text" name = "st" value="enter an indgredient"> </p>
+      <input type = "submit" />
+    </form>
   </header>
   <section>
     <%= yield %>

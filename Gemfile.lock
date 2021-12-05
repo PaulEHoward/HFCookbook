@@ -1,20 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    ffi (1.15.0)
+    ffi (1.15.4)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    nio4r (2.5.7)
-    pg (1.2.3)
-    puma (5.2.2)
+    nio4r (2.5.8)
+    puma (5.5.2)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
-    rb-fsevent (0.10.4)
+    rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    ruby2_keywords (0.0.4)
+    ruby2_keywords (0.0.5)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -22,7 +21,7 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.7)
     sassc (2.4.0)
       ffi (~> 1.9)
-    sequel (5.42.0)
+    sequel (5.51.0)
     sinatra (2.1.0)
       mustermann (~> 1.0)
       rack (~> 2.2)
@@ -33,13 +32,12 @@ GEM
       tilt (>= 2.0.6, < 2.1)
     temple (0.8.2)
     tilt (2.0.10)
-    yaml (0.1.1)
+    yaml (0.2.0)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  pg
   puma
   sass
   sassc
@@ -49,7 +47,7 @@ DEPENDENCIES
   yaml
 
 RUBY VERSION
-   ruby 2.6.6p146
+   ruby 3.0.1p64
 
 BUNDLED WITH
-   2.2.14
+   2.2.32
