@@ -1,6 +1,5 @@
-<h1> Add a New Recipe </h1>
+<!-- <h1> <%="{@title}"%> </h1> -->
 
-<form method = "POST" action="/recipes">
+<form method = "POST" action="/recipes/<%="{@new_or_edit}"%>" >
 <%= erb :recipe_form %>
 </form>
-

@@ -41,7 +41,7 @@
 <ol>
 <% @recipe[:directions].each_with_index do |dir, i| %>
   <li>
-    <input type = "text" name = "recipe[:directions][<%"#{i}"%>]", size = "100" value = "<%="#{dir}"%>" >
+    <input type = "text" name = "recipe[:directions][<%"#{i}"%>]", size = "80" value = "<%="#{dir}"%>" >
 
   </li>
 <% end %>

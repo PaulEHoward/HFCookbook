@@ -1,0 +1,55 @@
+
+In an erb file the line
+<a href="/recipe/edit/<%= "x" %>"> whatever </a>
+is a link which will pass the contents of the variable x to /reicpe/edit/:id where
+can be accessed by params['id'].to_i (if x is an integer) or by params[:id].to_i (I think).
+So
+
+1.  In HFCookBook.rb, in get /recipes/:id' which is passed the index of a recipe
+in ind = params['id'].to_i, we want to pass the index along to show_recipe.erb.
+We'll pass it in @index so add to get /recipes/:id
+    @index = ind
+
+2. In /views/show_recipe.erb  we want to add an option to edit the recipe so
+we will add
+<p>
+< a href="/recipe/edit/<%="#{@index}"%>"> style="font-size:150%"> edit recipe </a>
+</p>
+So clicking on this link should pass the recipe index to get '/recipe/edit/:id' in
+params['id'].to_i
+
+3. In HFCookBook.rb we need to add
+get '/recipe/edit/:id' do
+  @title = `Edit Recipe`
+  id = params[:id].to_i
+  @recipe = cookbook[id]
+  
+  @new_or_edit = id  # "n" for new, recipe index (id) for edit
+  
+  erb :new_recipe, :layout => :pagelayout
+end
+
+4.  In get '/recipes/new' do  we'll add
+    @new_or_edit = "n"  # "n" for new, index of recipe for edit
+
+5.  Similarly in get '/recipes/edit/:id' we'll add
+    @new_or_edit = 1  # "n" for new, index of recipe  for edit
+
+6.  Rename post '/recipes' to
+  post '/recipes/:n_or_e' do
+
+7.  In new_recipe.erb, change <form method = "POST" action="/recipes"> to
+    <form method = "POST" action="/recipes/<%="{@new_or_edit}"%>" >
+
+8.  Forget 6. above, we replacing the whole post 'recipes' block by
+ post '/recipes/:n_or_e' do
+  recipen = trimiandd( hshkeys2symbols(params[:recipe]))  # *****
+  [cookbook, recp_index] = addrecipe(cookbook,  recipen, params[:n_or_e].to_i)
+  # File.write("cookbook.yml", YAML.dump(cookbook))  # add after testing
+  redirect to("/recipes/#{recp_index}")
+end
+
+
+And new_recipe.erb is designed so that this should work.
+
+What's left is to write the methoe addrecipe

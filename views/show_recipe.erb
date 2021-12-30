@@ -7,6 +7,9 @@
 <p>
 <a href="/recipelist" style="font-size:150%"> back to recipe list </a>
 </p>
+<p>
+<a href='/recipe/edit/<%="#{@index}"%>' style="font-size:150%"> edit recipe </a>
+</p>
 
 <h2  style="font-size:150%;text-align:center;text-color:red"> ingredients </h2>
 <table style="width:75%" class="center">
@@ -17,11 +20,11 @@
   </tr>
   <% @recipe[:ingredients].each  do |ingrdt| %>
     <tr>
-    <td style = "text-align:center; font-size:130%"> <%= "  #{ingrdt[:amount]} " %> </td> 
+    <td style = "text-align:center; font-size:130%"> <%= "  #{ingrdt[:amount]} " %> </td>
     <td style = "text-align:center; font-size:130%"> <%= "  #{ingrdt[:measure]}" %> </td>
     <td style = "text-align:center; font-size:130%"> <%= " #{ingrdt[:name]}" %> </td>
     </tr>
-  <% end %> 
+  <% end %>
 </table>
 
 <br>
@@ -31,8 +34,8 @@
     <li>
       <p style = "text-align:left; font-size:130%"> <%= " #{dir}" %> </p>
     </li>
-  <% end %> 
-</ol> 
+  <% end %>
+</ol>
 <table style="width:75%" class="center">
 <tr>
 <th> Directions </th>
@@ -41,6 +44,5 @@
     <tr>
       <td style = "text-align:left; font-size:130%"> <%= "#{ind +1}. #{dir}" %> </td>
     </tr>
-  <% end %> 
+  <% end %>
 </table>
- 

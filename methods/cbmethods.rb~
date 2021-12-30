@@ -21,7 +21,10 @@ end
 def categories(cb)
   recipecats = Array.new
   cb.each do |rcp|
-    if rcp[:categories].length > 0
+    if rcp[:categories == nil
+      print "\n\n #{rcp[:title]}\n"
+    end
+    if rcp[:categories] != nil && rcp[:categories].length > 0
       rcp[:categories].each do |categ|
         if !recipecats.include?(categ)
           recipecats = recipecats << categ
@@ -67,16 +70,27 @@ def recipeSearch(cb, st)
   return(recipesWithStr)
 end
 
-                          ####  addrecipe  #####
+                          ####  addrecipe(cb,rcp,n_or_e)  #####
 # inputs a cookbook and a recipe (cb, rcp, n_or_e), inputs a cookbook (cb), a recipe
 # (rcp) and "n" or recipe_index (which is an integer) (in n_or_e) 
 # and inserts the recipe in the cookbook
-# alphabetically by title if it's new or replaces the old version if n_or_e isthe index of the recipe to be replaced and
-# returns the new cookbook and the index of the inserted recipe and the 
-# inserted or replaced recipe as an array
+# alphabetically by title if it's new or replaces the old version if n_or_e isthe 
+# index of the recipe to be replaced and
+# returns the new cookbook and the index of the inserted recipe as an array
 
 def addrecipe(cb,rcp, n_or_e)
-
+  if (n_or_e.is_a? Integer)  # We're replacing the recipe at position n_or_e
+    cb[n_or_e] = rcp
+  else                      # We're inserting a new recipe    
+    cb[cb.length] = rcp     # insert it at the end
+    cb.sort_by! { |k| k[:title]}  # and sort by title
+    cb.each_with_index do |r, i| 
+      if( r[:title]== rcp[:title])
+        n_or_e =  i
+      end
+    end
+  end
+  return [cb , n_or_e] 
 end
 
                           #### mknewrecipe ###
@@ -236,7 +250,6 @@ class Recipes
 end
 =end
 
-
 ###### hshkeys2symbols ###############
 
 # hshkeys2symbols takes a hash as input and, if the keys are
@@ -252,34 +265,33 @@ def hshkeys2symbols (hsh)
     newhsh = hsh
   else
     hsh.each do |label, contents|
-      if(!label.is_a?(String))
+    if(!label.is_a?(String))
         newlabel = label
-      else
+    else
         newlabel = label.gsub(":","").to_sym
-      end
-      if(!contents.is_a?(Array))
+    end
+    if(!contents.is_a?(Array))
         newhsh[newlabel] = contents
+    else
+      newhsh[newlabel] = Array.new
+      contents.each_with_index do |arrayelt, ind|
+      if( !(arrayelt.is_a?(Hash)))
+        newhsh[newlabel][ind] = arrayelt
       else
-        newhsh[newlabel] = Array.new
-        contents.each_with_index do |arrayelt, ind|
-          if( !(arrayelt.is_a?(Hash)))
-            newhsh[newlabel][ind] = arrayelt
-          else
-            newhsh[newlabel][ind] = Hash.new
-            arrayelt.each do |hshlbl, hshcontents|
-              if (!hshlbl.is_a?(String))
-                newhsh[newlabel][ind][hshlbl] = hshcontents
-              else
-                newhshlbl = hshlbl.gsub(":","").to_sym
-                newhsh[newlabel][ind][newhshlbl] =
-                               hshcontents
-              end
-            end
-          end
+        newhsh[newlabel][ind] = Hash.new
+        arrayelt.each do |hshlbl, hshcontents|
+        if (!hshlbl.is_a?(String))
+            newhsh[newlabel][ind][hshlbl] = hshcontents
+        else
+            newhshlbl = hshlbl.gsub(":","").to_sym
+            newhsh[newlabel][ind][newhshlbl] = hshcontents
+        end        
         end
+      end      
       end
+    end    
     end
   end
   return newhsh
 end
-#  BxFyicBp
+

@@ -21,7 +21,10 @@ end
 def categories(cb)
   recipecats = Array.new
   cb.each do |rcp|
-    if rcp[:categories].length > 0
+    if rcp[:categories] == nil
+      print "\n\n #{rcp[:title]}\n"
+    end
+    if rcp[:categories] != nil && rcp[:categories].length > 0
       rcp[:categories].each do |categ|
         if !recipecats.include?(categ)
           recipecats = recipecats << categ
@@ -67,9 +70,106 @@ def recipeSearch(cb, st)
   return(recipesWithStr)
 end
 
+                          ####  addrecipe(cb,rcp,n_or_e)  #####
+# inputs a cookbook and a recipe (cb, rcp, n_or_e), inputs a cookbook (cb), a recipe
+# (rcp) and "n" or recipe_index (which is an integer) (in n_or_e) 
+# and inserts the recipe in the cookbook
+# alphabetically by title if it's new or replaces the old version if n_or_e isthe 
+# index of the recipe to be replaced and
+# returns the new cookbook and the index of the inserted recipe as an array
 
-#  Class for recipes
+def addrecipe(cb,rcp, n_or_e)
+  if (n_or_e.is_a? Integer)  # We're replacing the recipe at position n_or_e
+    cb[n_or_e] = rcp
+  else                      # We're inserting a new recipe    
+    cb[cb.length] = rcp     # insert it at the end
+    cb.sort_by! { |k| k[:title]}  # and sort by title
+    cb.each_with_index do |r, i| 
+      if( r[:title]== rcp[:title])
+        n_or_e =  i
+      end
+    end
+  end
+  return [cb , n_or_e] 
+end
 
+                          #### mknewrecipe ###
+  # returns a hash with keys :title, :author, :servings, :preptime, (all strings),
+  # :categories (array), :ingredients (array), :directions (array), and the strings
+  # ;source, :cooktime, :totaltime, :ratings, :perserving and :notes
+
+  def mknewrecipe
+    rcpe = Hash.new
+    rcpe[:title] = ""
+    rcpe[:author] = ""
+    rcpe[:servings] = ""
+    rcpe[:preptime] = ""
+    rcpe[:categories] = Array.new
+    rcpe[:ingredients] = Array.new
+    rcpe[:directions] = Array.new
+    rcpe[:source] = ""
+    rcpe[:cooktime] = ""
+    rcpe[:totaltime] = ""
+    rcpe[:ratings] = ""
+    rcpe[:perserving] = ""
+    rcpe[:notes] = ""
+    (0..11).each do |i|
+      rcpe[:ingredients][i] = {amount: "", measure: "", name: ""}
+    end
+    (0..11).each do |i|
+      rcpe[:directions][i] = ""
+    end
+    return(rcpe)
+  end
+
+
+          ###  trimiand(r) ###
+# trims off unused ingredients and directions in a recipe and returns the trimmed
+# recipe
+
+  def trimiandd(r)
+    trimmedr = r
+    print "\n Top of trimiandd the value of trimmedr is #{trimmedr} \n\n"  #diagnostic
+    if ( trimmedr[:ingredients].is_a?(Array))
+      print "\n (trimmedr[:ingredients] is an array in trimiandd.) \n"  # diagnostic
+#      trimmedr[:ingredients].reverse_each.with_index do |ingred, i|
+    li = trimmedr[:ingredients].length - 1
+    (0 .. li).each do |i|
+#        print "\n from inside triminadd ingredient is #{$ingred[:name]}\n\n" #diagnostic
+         ingred = trimmedr[:ingredients][li - i]   # to save typing
+         print "\n ingredient #{li - i} is #{ingred} \n"  #diagnostic
+        if (!ingred[:amount].match(/[a-zA-Z0-9]/) &&
+            !ingred[:measure].match(/[a-zA-Z0-9]/)&&
+            !ingred[:name].match(/[a-zA-Z0-9]/) )
+          trimmedr[:ingredients].delete_at(li - i)
+        end
+      end
+    end
+    print "\n In trimiandd after trimming ingredients, the value of trimmedr is #{trimmedr} \n\n"  # diagnostic
+    if ( trimmedr[:directions].is_a?(Array) )
+      li = trimmedr[:directions].length - 1
+      (0 .. li).each do |i|
+        direc = trimmedr[:directions][li - i]
+        print "\n direction #{li - i} is #{direc}. \n"
+        if (!(trimmedr[:directions][li-i].match(/[a-zA-Z0-9]/)))
+          trimmedr[:directions].delete_at(li - i)
+        end
+      end
+#      trimmedr[:directions].reverse_each_with_index do |direction, i|
+#        if (direction == "")
+#          trimmedr[:directions].delete_at(i)
+#        end
+#      end
+    end
+    return trimmedr
+  end
+
+
+#  Class for recipes (Added 12/9/21) Not sure I'll use this.  The method mknewrecipe
+#  seems less complicated  (see above).
+
+# classs Recipes is commented out
+=begin
 
 class Recipes
 
@@ -130,7 +230,7 @@ class Recipes
   # so instance.rhash should give the recipe hash
 
   def trim # trims off unused ingredients and directions
-    if ( @ingredients.is_a(Array))
+    if ( @ingredients.is_a?(Array))
       @ingredients.each_with_index do |ingred, i|
         if (ingred[amount]=="" &&
             ingred[measure] == "" &&
@@ -139,7 +239,7 @@ class Recipes
         end
       end
     end
-    if ( @directions.is_a(Array) )
+    if ( @directions.is_a?(Array) )
       @directions.each_with_index do |direction, i|
         if (direction == "")
           @directions.delete_at(i)
@@ -148,6 +248,9 @@ class Recipes
     end
   end
 end
+=end
+
+###### hshkeys2symbols ###############
 
 # hshkeys2symbols takes a hash as input and, if the keys are
 # strings, converts them to symbols.  If the string
@@ -162,33 +265,33 @@ def hshkeys2symbols (hsh)
     newhsh = hsh
   else
     hsh.each do |label, contents|
-      if(!label.is_a?(String))
+    if(!label.is_a?(String))
         newlabel = label
-      else
+    else
         newlabel = label.gsub(":","").to_sym
-      end
-      if(!contents.is_a?(Array))
+    end
+    if(!contents.is_a?(Array))
         newhsh[newlabel] = contents
+    else
+      newhsh[newlabel] = Array.new
+      contents.each_with_index do |arrayelt, ind|
+      if( !(arrayelt.is_a?(Hash)))
+        newhsh[newlabel][ind] = arrayelt
       else
-        newhsh[newlabel] = Array.new
-        contents.each_with_index do |arrayelt, ind|
-          if( !(arrayelt.is_a?(Hash)))
-            newhsh[newlabel][ind] = arrayelt
-          else
-            newhsh[newlabel][ind] = Hash.new
-            arrayelt.each do |hshlbl, hshcontents|
-              if (!hshlbl.is_a?(String))
-                newhsh[newlabel][ind][hshlbl] = hshcontents
-              else
-                newhshlbl = hshlbl.gsub(":","").to_sym
-                newhsh[newlabel][ind][newhshlbl] =
-                               hshcontents
-              end
-            end
-          end
+        newhsh[newlabel][ind] = Hash.new
+        arrayelt.each do |hshlbl, hshcontents|
+        if (!hshlbl.is_a?(String))
+            newhsh[newlabel][ind][hshlbl] = hshcontents
+        else
+            newhshlbl = hshlbl.gsub(":","").to_sym
+            newhsh[newlabel][ind][newhshlbl] = hshcontents
+        end        
         end
+      end      
       end
+    end    
     end
   end
   return newhsh
 end
+

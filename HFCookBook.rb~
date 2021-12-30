@@ -97,7 +97,7 @@ end
 
 =end
 
-post '/recipes/:n_or_e' do
+post '/recipes/n_or_e' do
   @title = "Add new or edited recipe to cookbook"
   erb :underconstruction, :layout => :pagelayout
 end

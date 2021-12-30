@@ -32,3 +32,6 @@ inputs
   <input type = "submit" />
 </form>
 (then, supposedly, the search term st can be accessed in HFCookBook.rb as params[:st].to_s.)
+
+There were some problems in using the updated program but updating ruby took care of them
+See:  attempttoUpdateRuby12_4_21.txt

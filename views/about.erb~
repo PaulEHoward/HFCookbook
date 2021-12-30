@@ -1,0 +1,21 @@
+
+    <p style="text-align:center"><a href='/recipes/new' style = "font-size: 120%"> Create a new recipe </a>
+    </p>
+    <br>
+    <% if @recipetitles.any? %>
+      <table style="width:50%" class="center">
+        <tr>
+          <th> Title </th>
+        </tr>
+         <% @recipetitles.each do |title| %>
+            <tr>
+              <td> <a href = "/recipes/<%="#{title[1]}"%>">
+                          <%= "#{title[0]}" %> </a>
+              </td>
+            </tr>
+         <% end %>
+       </table>
+       <% else %>
+          <p> No recipes have been created. </p>
+    </p>      
+    <% end %>

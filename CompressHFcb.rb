@@ -45,9 +45,10 @@ def readRecipe(ifile) # reads one recipe into a hash
   end
   line = line.chomp!
   print "  #{line}\n\n"  #diagnostic
-  matches = line.match(/\s*(?<title>.*)\s*\Z/)
   recipe[:title] = "Untitled"  # in case there is no title (added 11/25/21)
-  recipe[:title] = matches[:title]
+  if ( matches = line.match(/\s*(?<title>.*)\s*\Z/))
+    recipe[:title] = matches[:title]
+  end
 
         # Get the author
 
@@ -80,10 +81,12 @@ def readRecipe(ifile) # reads one recipe into a hash
     istring = istring << line
     line = ifile.gets
   end
-  cats = istring.match(/.*:\s*(?<categories>.*)\s*|\z/)
-  catarray = cats[:categories].split(/\s{2,}/)
- # catarray = cats[:categories].scan(/\w+|\G\w+/) # not exactly sure why this works
-  recipe[:categories] = catarray
+  recipe[:categories] = []  # In case there are not categories
+  if (cats = istring.match(/.*:\s*(?<categories>.*)\s*|\z/))
+    catarray = cats[:categories].split(/\s{2,}/)
+      # catarray = cats[:categories].scan(/\w+|\G\w+/) # not exactly sure why this works
+    recipe[:categories] = catarray
+  end
 
           # Get ingredients (An array of hashes)
           # one hash for each ingredient

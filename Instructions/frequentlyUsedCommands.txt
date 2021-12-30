@@ -51,3 +51,12 @@ going to
 https://hfcookbook.herokuapp.com/
 
 gave me the cook book.
+
+To push to github:
+
+cd ~/.ssh
+The files id_rsa and id_rsa.pub did not appear so I entered
+ssh-keygen -t rsa -C "phoward@emich.edu"
+(accepting the defaults)
+then opened id_rsa.pub and copied the contents.  Then logged into my github account and under Account Settings (From the menu in the upper right hand corner click on "settings") clicked on SSH and GPG keys.  Then on ""New SSH key" and pasted the key.  And now
+git push -u origin main 
