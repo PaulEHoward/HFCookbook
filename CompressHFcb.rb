@@ -8,7 +8,7 @@
         ######################################################
 
 cblongfile = File.open("HFC.txt",'r')   # The MasterCook text file full version.
-# cblongfile = File.open("HFCShort.txt",'r')   # The MasterCook text file short version.
+#cblongfile = File.open("HFCShort.txt",'r')   # The MasterCook text file short version.
             #############
             #  Methods  #
             #############
@@ -25,10 +25,32 @@ def findLine(ifile,st)
     if( ifile.eof)
       return   "end of file"
     end
-  
-     return line
-  
+    return line
 end
+
+# regexarraymatch(str,rgexarray) takes a string str and an array of regular 
+# expressions (without the /.../) and returns an array
+# [trthval, matches] where trthval = True and matches contains the last match
+# if there is a match at the beginning of a line
+# and if there is no match at the beginning of a line 
+#  trthval = False and matches = 
+# "none".  Added 12/31/21
+
+def regexarraymatch(str,regexary) 
+  trthval = false
+  matches = "none"
+  print "\n String = #{str} and Regexary = #{regexary} \n"
+  regexary.each do |rx|
+    if m = str.match(/\A\s*(?<mtch>#{Regexp.quote(rx)})/)  #to interpret rx literally
+      trthval = true
+      matches = m[:mtch]
+    end
+  end
+  retrnarray = [trthval, matches]
+  print "\n Return from regexarraymatch \n"
+  return retrnarray
+end      
+
 
 def readRecipe(ifile) # reads one recipe into a hash
   line = findLine(ifile,"Exported from MasterCook")
@@ -44,7 +66,7 @@ def readRecipe(ifile) # reads one recipe into a hash
     line = ifile.gets           # skip blank lines before the title
   end
   line = line.chomp!
-  print "  #{line}\n\n"  #diagnostic
+ # print "  #{line}\n\n"  #diagnostic
   recipe[:title] = "Untitled"  # in case there is no title (added 11/25/21)
   if ( matches = line.match(/\s*(?<title>.*)\s*\Z/))
     recipe[:title] = matches[:title]
@@ -81,7 +103,7 @@ def readRecipe(ifile) # reads one recipe into a hash
     istring = istring << line
     line = ifile.gets
   end
-  recipe[:categories] = []  # In case there are not categories
+  recipe[:categories] = []  # In case there are no categories
   if (cats = istring.match(/.*:\s*(?<categories>.*)\s*|\z/))
     catarray = cats[:categories].split(/\s{2,}/)
       # catarray = cats[:categories].scan(/\w+|\G\w+/) # not exactly sure why this works
@@ -98,8 +120,8 @@ def readRecipe(ifile) # reads one recipe into a hash
   end
   ingredients = Array.new
   line = ifile.gets   # first ingredient
-  while (line.match(/\w/))
-    print "#{line}\n"  # diagnostic
+  while (line.match(/\S/))
+#    print "#{line}\n"  # diagnostic
     matches1 = line.match(/\A\s*(?<amount>[\d\s\/]*)/)
     matches2 = line.match(/.{9}\s*(?<measure>\w+)/)
     matches3 = line.match(/.{24}\s*(?<name>.*)/)
@@ -113,133 +135,104 @@ def readRecipe(ifile) # reads one recipe into a hash
   end
   recipe[:ingredients] = ingredients
 
-          # Get directions in an array
+         # Get directions in an array (altered 12/21/31)
+         # at this point we have only white space in line
 
   directions = Array.new
-  line = ifile.gets   # this should be the first 
-                      # direction line    
+  line = ifile.gets   
+  while !line.match(/\S/)
+    line = ifile.gets
+  end    
+  print "\n ****** First Dir Line #{line} \n"
+   # line *should*  be the first
+                      # direction line
    #  directions may be more than one line long and
-   # are separated by a blank line.  The list of 
-   # directions ends with 3 blank lines followed by the
-   # line "Source:"
-   while (!(line.match(/Source:/)) && !(line.match(/- - -/)) && !(line.match(/Cuisine:/)))
+   # are separated by a blank line.  The list of
+   # directions ends with 1, 2 or 3 blank lines followed by the
+   # line "Source:" or "Description:" or "Cuisine:" or "Yield:" or 
+   # "Start to Finish Time": or "T(Cooking Time):" or "Ratings" 
+   # These, if they exist, are followed by a line with 20 or so - - - 
+   # Then "Per Serving (excluding unknown items):" (always) and 
+   # "Nutr. Assoc. :" (always) with (possibly) "NOTES :" and
+   # "Serving Ideas :" in between.
+   # The next recipe begins with * Exported from MasterCook * then blank line
+   
+   kywrdarray = ["Source:", "Cuisine:", "Yield:", "Description:","Start to Finish Time:",
+                 "T\(Cooking Time\)", "Ratings", "Per Serving", "NOTES", "Serving Ideas",
+                 "Nutr\. Assoc\."]
+   keywordfound = regexarraymatch(line,kywrdarray)[0]  
+                   
+   while (!(keywordfound) && !(line.match(/- - -/))) # while line begins with no key words
+                                                    # and contains no "- - -"
      dirline = line.chomp.strip
-     while (line.match(/\w/))    # \w is a digit or letter
+     while (line.match(/\S/))    # \S is a non-white space character
         line = ifile.gets
         dirline = dirline << " " << line.chomp.strip
      end
-     print "  #{dirline}\n"
 
-     if (m = dirline.match(/\A\s*\d+\.\s*(?<direction>.*)/))
+     if (m = dirline.match(/\A\s*\d*\W*(?<direction>.*)/))  # directions may or
+                              # may not begin with "digits."
        directions[directions.length] = m[:direction].strip
      end  
-     while (!(line.match(/\w/)))
+     while (!(line.match(/\S/)) || line.match(/- - -/) )     #*****
         line = ifile.gets
      end
+     keywordfound = regexarraymatch(line,kywrdarray)[0]
    end
+   print "\n found a KEYWORD.  It's #{regexarraymatch(line,kywrdarray)[1]} \n"
    recipe[:directions] = directions
-
-           # Get the Source, Total time, cooking time
-           # and Ratings if they exist
-           # (this group ends with "    - - - - - ...")
-   longline = line.chomp.strip # We're on 
-                               # the line beginnig 
-                               # Source: or the line beginning with
-                               # Cuisine:
-   while(!(line.match(/- - -/)))
+   
+           # This completes the directions. line contains a keyword and it's
+           # not Nutr. Assoc.   Now initialize the recipe
+           # hash with keywords as keys to ""
+           print "\n line should contain a keyword: #{line}\n"
+   
+   kywrdarray.each do |kw|
+      recipe[kw.to_sym] = ""
+   end  
+  
+        # Now we get the values for the key words that are there 
+        
+       print "\n line before entering values for keywords while #{line}\n"    
+         
+   while (line.match(/- - -/) || !line.match(/\S/))   # clumsy way to handle the - - - lines
      line = ifile.gets
-     longline = longline << " " << line.chomp.strip
-   end
-
-   if (!(m = longline.match(/Cuisine:\s*"(?<cuisine>.*?)"/)))
-    recipe[:cuisine] = ""
-   else
-    recipe[:cuisine] = m[:cuisine]
-   end
-
-   if (!(m = longline.match(/Source:\s*"(?<source>.*?)"/)))
-    recipe[:source] = ""
-   else
-    recipe[:source] = m[:source]
-   end
-
-   if (!(m = longline.match(/Start.*:\s*"(?<totaltime>.*?)"/)))
-    recipe[:totaltime] = ""
-   else
-    recipe[:totaltime] = m[:totaltime]
-   end
-
-   if (!(m = longline.match(/T\(Coo.*:\s*"(?<cooktime>.*?)"/)))
-    recipe[:cooktime] = ""
-   else
-    recipe[:cooktime] = m[:cooktime]
-   end
-
-   if (!(m = longline.match(/Ratings.*:\s*(?<ratings>.*?)\- - -/)))
-    recipe[:ratings] = ""
-   else
-    
-    recipe[:ratings] = m[:ratings].gsub(/\s{2,}/," ")
-   end
-
-                  # Get the "per serving" stuff
-
-   while (!(line.match(/\w/)))
-    line = ifile.gets
-   end
-   lperserving = line.chomp.strip
-   while (line.match(/\w/))
-    line = ifile.gets
-    lperserving = lperserving << " " << line.chomp.strip
-   end
-   if (!(m = lperserving.match(/\):\s*(?<perserving>.*)/)))
-    recipe[:perserving] = ""
-   else
-    recipe[:perserving] = m[:perserving]
-   end
-
-                 # Get the Notes
-     # The recipe ends with the line "Nutr. Assoc. ..."
-     # So we'll get everything up to there and then match
-     # "NOTES"  (looks like NOTES are always followed by
-     # Nutr. Assoc.)
-   while (!(line.match(/\w/)))
-    line = ifile.gets
-   end
-   laststr = line.chomp.strip
- #  line = ifile.gets
-   while (!(line.match(/Nutr\./)))
-    line = ifile.gets
-    line = line.chomp.strip
-    line = line.gsub(/\s{2,}/," ")     
-    laststr = laststr << " " << line
-   end
-   print "   #{laststr} \n"
-   laststr.gsub(/\s{2,}/," ")
-
-   if (!(m = laststr.match(/NOTES\s*:\s*(?<notes>.*)/)))
-     recipe[:notes] = ""
-   else
-    recipe[:notes] = m[:notes]
-   end
-                    
-  return recipe
+   end    
+   
+   while (!line.match(/Nutr\./))
+      longline = line.gsub(/(?:- )+-/,"").chomp.strip
+      line = ifile.gets
+      print "\n longline before while #{longline} \n"
+      while (!regexarraymatch(line,kywrdarray)[0] )
+         print "\n After call 3 \n"
+        longline = longline << " " << line.gsub(/(?:- )+-/,"").chomp.strip # because
+                    # of the line with - - - ..."
+        line = ifile.gets
+      end
+      print "\n longline before the match #{longline}\n"
+      matches = longline.match(/(?<key>\A.*?):\s*(?<value>.*)/) #get key and value
+      key = matches[:key].to_sym
+      value = matches[:value]
+      recipe[key] = value        
+   end  
+   return recipe
 end 
    
           
        #################
        #  End Methods  #
        #################
+       
 require 'yaml'       
 cookbook = Array.new       
 while !(cblongfile.eof)
   recipehash = readRecipe(cblongfile)
-  print "#{recipehash} \n\n"         # to test (delete later)
+ #  print "***** In Main #{recipehash[:title]} \n"         # to test (delete later)
   if (recipehash != nil)
     cookbook[cookbook.length] = recipehash
   end
 end
-File.write("cookbook.yml", YAML.dump(cookbook))
+File.write("cookbook.yml", YAML.dump(cookbook))  # to test CompressHFcb.rb
 
 cblongfile.close
 
