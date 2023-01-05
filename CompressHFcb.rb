@@ -1,7 +1,7 @@
 # 
 # Inputs a MasterCook text file exported by MasterCook (cblongfile) and converts it to a 
-# .yml data file for use by the program HFCookBook.rb  HFCookBook.rb will read it as an 
-# of hashes.
+# .yml data file for use by the program HFCookBook.rb  HFCookBook.rb will read 
+# it as an array of hashes.
 #
         ######################################################
         # Initial Stuff:  Opening the input file             #
@@ -216,7 +216,7 @@ def readRecipe(ifile) # reads one recipe into a hash
       recipe[key] = value        
    end  
    return recipe
-end 
+end   # (readRecipe(ifile))
    
           
        #################
