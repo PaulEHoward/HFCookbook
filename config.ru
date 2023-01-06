@@ -1,5 +1,5 @@
 require 'rack'
-require 'rack/contrib'
+# require 'rack/contrib'
 require_relative './HFCookBook.rb'
 
 set :root, File.dirname(__FILE__)
