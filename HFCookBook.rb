@@ -1,7 +1,7 @@
 ############### Howard Family Cookbook #################
 
 require "sinatra"
-require 'sass'
+# require 'sass'
 require "./methods/cbmethods.rb"  # try to store all
                                   # methods here
 require "yaml"
