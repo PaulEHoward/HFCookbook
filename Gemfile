@@ -5,6 +5,7 @@ gem "sequel"
 # gem "pg"
 gem "slim"
 gem "sassc"
+gem "sass"
 gem "yaml"
 gem "puma"
 gem 'aws-record', '~> 2'
